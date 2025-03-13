@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Progress Chart</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            padding: 20px;
+            background-color: #1e1e1e;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+        h2 {
+            text-align: center;
+            background-color: #002f6c;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .section {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #292929;
+            border-radius: 8px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            border: none;
+            background: #3a3a3a;
+            color: #ffffff;
+            border-radius: 4px;
+        }
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .checkbox-group label {
+            width: 45%;
+            font-weight: normal;
+        }
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #0056b3;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+        .submit-btn:hover {
+            background-color: #003c80;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>My Monthly Progress Chart</h2>
+
+    <div class="section">
+        <label>Name:</label>
+        <input type="text" id="name" placeholder="Enter your name">
+        
+        <label>Month & Year:</label>
+        <input type="text" id="monthYear" placeholder="e.g., May 2024">
+        
+        <label>Simple Setups:</label>
+        <input type="number" id="simpleSetups" value="0">
+        
+        <label>Complex Setups:</label>
+        <input type="number" id="complexSetups" value="0">
+        
+        <label>First Transaction Assistance:</label>
+        <input type="number" id="firstTransaction" value="0">
+        
+        <label>Client Visits:</label>
+        <input type="number" id="clientVisits" value="0">
+    </div>
+
+    <div class="section">
+        <h3>Product Knowledge</h3>
+        <label>Products I am proficient with:</label>
+        <div class="checkbox-group">
+            <label><input type="checkbox" value="ENBD Transfers"> ENBD Transfers</label>
+            <label><input type="checkbox" value="GPSSA"> GPSSA</label>
+            <label><input type="checkbox" value="Host to Host"> Host to Host</label>
+            <label><input type="checkbox" value="API Banking"> API Banking</label>
+            <label><input type="checkbox" value="FCY Transfers"> FCY Transfers</label>
+            <label><input type="checkbox" value="DDS"> DDS</label>
+            <label><input type="checkbox" value="Cheque Printing"> Cheque Printing</label>
+            <label><input type="checkbox" value="Swift Score"> Swift Score</label>
+            <label><input type="checkbox" value="LCY Payments"> LCY Payments</label>
+            <label><input type="checkbox" value="Trade"> Trade</label>
+            <label><input type="checkbox" value="Salary WPS"> Salary WPS</label>
+            <label><input type="checkbox" value="ICCS"> ICCS</label>
+            <label><input type="checkbox" value="Mobile App"> Mobile App</label>
+            <label><input type="checkbox" value="Virtual Accounts"> Virtual Accounts</label>
+            <label><input type="checkbox" value="Admin Module"> Admin Module</label>
+            <label><input type="checkbox" value="Fixed Debit"> Fixed Debit</label>
+            <label><input type="checkbox" value="Special Deal"> Special Deal</label>
+            <label><input type="checkbox" value="Utilities"> Utilities</label>
+        </div>
+
+        <label>Products I am yet to learn about:</label>
+        <div class="checkbox-group">
+            <label><input type="checkbox" value="File Encryption"> File Encryption</label>
+            <label><input type="checkbox" value="Service Portal"> Service Portal</label>
+            <label><input type="checkbox" value="Cheque Printing"> Cheque Printing</label>
+            <label><input type="checkbox" value="Swift Score"> Swift Score</label>
+            <label><input type="checkbox" value="API Banking"> API Banking</label>
+            <label><input type="checkbox" value="Virtual Accounts"> Virtual Accounts</label>
+            <label><input type="checkbox" value="Utilities"> Utilities</label>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3>Leaves & WFH</h3>
+        <label>Annual Leave:</label>
+        <input type="number" id="annualLeave" value="0">
+        
+        <label>Sick Leave:</label>
+        <input type="number" id="sickLeave" value="0">
+        
+        <label>Work From Home (WFH):</label>
+        <input type="number" id="wfh" value="0">
+        
+        <label>Other Leaves:</label>
+        <input type="text" id="otherLeaves">
+        
+        <label>Reason for Other Leave:</label>
+        <textarea id="leaveReason"></textarea>
+    </div>
+
+    <div class="section">
+        <h3>Learning and Development</h3>
+        <label>Courses Assigned to Me:</label>
+        <textarea id="coursesAssigned"></textarea>
+
+        <label>Courses Completed on My Own Initiative:</label>
+        <textarea id="coursesCompleted"></textarea>
+    </div>
+
+    <div class="section">
+        <h3>Additional Contributions</h3>
+        <label>Other ways I have added value to my company:</label>
+        <textarea id="addedValue"></textarea>
+    </div>
+
+    <button class="submit-btn" onclick="generateExcel()">Submit & Download Report</button>
+</div>
+
+<script>
+    function generateExcel() {
+        let data = [
+            ["My Monthly Progress Chart"],
+            ["Name", document.getElementById("name").value],
+            ["Month & Year", document.getElementById("monthYear").value],
+            ["Simple Setups", document.getElementById("simpleSetups").value],
+            ["Complex Setups", document.getElementById("complexSetups").value],
+            ["First Transaction Assistance", document.getElementById("firstTransaction").value],
+            ["Client Visits", document.getElementById("clientVisits").value],
+            [],
+            ["Product Knowledge"],
+            ["Proficient With", getCheckedValues()],
+            ["Yet to Learn", getCheckedValues("yetToLearn")],
+            [],
+            ["Leaves & WFH"],
+            ["Annual Leave", document.getElementById("annualLeave").value],
+            ["Sick Leave", document.getElementById("sickLeave").value],
+            ["WFH", document.getElementById("wfh").value],
+            ["Other Leaves", document.getElementById("otherLeaves").value],
+            ["Reason for Other Leave", document.getElementById("leaveReason").value]
+        ];
+
+        let ws = XLSX.utils.aoa_to_sheet(data);
+        let wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Monthly Report");
+        XLSX.writeFile(wb, "Monthly_Progress_Report.xlsx");
+    }
+
+    function getCheckedValues() {
+        let checkboxes = document.querySelectorAll(".checkbox-group input:checked");
+        return Array.from(checkboxes).map(cb => cb.value).join(", ");
+    }
+</script>
+
+</body>
+</html>
