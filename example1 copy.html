@@ -187,56 +187,64 @@
         <button id="submitButton" onclick="generatePDF()">Submit & Download PDF</button>
     </div>
 
-    <script>function setCurrentMonthYear() {
-            const date = new Date();
-            const options = { year: 'numeric', month: 'long' };
-            document.getElementById("monthYear").textContent = date.toLocaleDateString('en-US', options);
+    <script>
+        function prepareForCapture(hiddenElements, hiddenClasses) {
+    // Hide elements by ID
+    hiddenElements.forEach(id => {
+        let element = document.getElementById(id);
+        if (element) {
+            element.style.display = "none";
         }
-        setCurrentMonthYear();
+    });
 
-        function prepareForCapture(hiddenElements) {
-            hiddenElements.forEach(id => {
-                let element = document.getElementById(id);
-                if (element) element.style.display = "none";
-            });
+    // Hide elements by class
+    hiddenClasses.forEach(className => {
+        let elements = document.querySelectorAll(`.${className}`);
+        elements.forEach(element => {
+            element.style.display = "none";
+        });
+    });
+}
+
+function restoreAfterCapture(hiddenElements, hiddenClasses) {
+    // Restore elements by ID
+    hiddenElements.forEach(id => {
+        let element = document.getElementById(id);
+        if (element) {
+            element.style.display = "";
         }
+    });
 
-        function restoreAfterCapture(hiddenElements) {
-            hiddenElements.forEach(id => {
-                let element = document.getElementById(id);
-                if (element) element.style.display = "";
-            });
-        }
+    // Restore elements by class
+    hiddenClasses.forEach(className => {
+        let elements = document.querySelectorAll(`.${className}`);
+        elements.forEach(element => {
+            element.style.display = "";
+        });
+    });
+}
+}
+function generatePDF() {
+    const { jsPDF } = window.jspdf;
+    
+    const hiddenElements = ["submitButton", "footer"]; // Hide by ID
+    const hiddenClasses = ["ads-section", "remove-on-print"]; // Hide by CSS class
 
-        function generatePDF() {
-            const { jsPDF } = window.jspdf;
-            const hiddenElements = ["submitButton"];
+    prepareForCapture(hiddenElements, hiddenClasses); // Hide elements before capture
 
-            prepareForCapture(hiddenElements);
+    setTimeout(() => {
+        html2canvas(document.querySelector("#capture"), { scale: 2 }).then(canvas => {
+            let imgData = canvas.toDataURL("image/png");
+            let pdf = new jsPDF("p", "mm", "a4");
+            pdf.addImage(imgData, "PNG", 0, 0, 210, 297);
+            pdf.save("Monthly_Progress_Report.pdf");
 
-            setTimeout(() => {
-                html2canvas(document.querySelector("#capture"), { scale: 2 }).then(canvas => {
-                    let imgData = canvas.toDataURL("image/png");
-                    let pdf = new jsPDF("p", "mm", "a4");
-                    pdf.addImage(imgData, "PNG", 0, 0, 210, 297);
-                    pdf.save("Monthly_Progress_Report.pdf");
-                    restoreAfterCapture(hiddenElements);
-                });
-            }, 500);
-        }
+            restoreAfterCapture(hiddenElements, hiddenClasses); // Restore elements after capture
+        });
+    }, 500);
+}
 
-        function addItem(listId, inputId) {
-            let input = document.getElementById(inputId);
-            let value = input.value.trim();
-
-            if (value !== "") {
-                let list = document.getElementById(listId);
-                let li = document.createElement("li");
-                li.innerHTML = `${value} <button class="remove-btn" onclick="this.parentNode.remove()">X</button>`;
-                list.appendChild(li);
-                input.value = "";
-            }
-        }</script>
+    </script>
 
 </body>
 </html>
