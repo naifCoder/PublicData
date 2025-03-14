@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monthly Progress Chart</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,6 +14,7 @@
             margin: 0;
             padding: 20px;
         }
+
         .container {
             max-width: 900px;
             margin: auto;
@@ -21,64 +23,92 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
         }
+
         h2 {
             text-align: center;
             background-color: #002f6c;
             padding: 10px;
             border-radius: 5px;
         }
+
         .section {
             margin: 20px 0;
             padding: 15px;
             background-color: #292929;
             border-radius: 8px;
         }
+
         label {
             font-weight: bold;
             display: block;
             margin: 10px 0 5px;
         }
+
         input {
-            width: calc(100% - 50px);
+            width: 100%;
             padding: 8px;
             border: none;
             background: #3a3a3a;
             color: #ffffff;
             border-radius: 4px;
-            display: inline-block;
         }
+
+        .row {
+            display: flex;
+            gap: 10px;
+        }
+
+            .row div {
+                flex: 1;
+            }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+            .checkbox-group label {
+                width: 45%;
+                font-weight: normal;
+            }
+
         button {
-            padding: 8px 12px;
+            padding: 10px 15px;
             background-color: #0056b3;
             border: none;
             color: white;
             font-size: 14px;
             cursor: pointer;
             border-radius: 4px;
-            display: inline-block;
+            margin-top: 10px;
         }
-        button:hover {
-            background-color: #003c80;
-        }
+
+            button:hover {
+                background-color: #003c80;
+            }
+
         .list-container {
             margin-top: 10px;
             background: #3a3a3a;
             padding: 10px;
             border-radius: 5px;
         }
-        .list-container ul {
-            list-style: none;
-            padding: 0;
-        }
-        .list-container ul li {
-            background: #222;
-            padding: 5px;
-            margin: 5px 0;
-            border-radius: 3px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+
+            .list-container ul {
+                list-style: none;
+                padding: 0;
+            }
+
+                .list-container ul li {
+                    background: #222;
+                    padding: 5px;
+                    margin: 5px 0;
+                    border-radius: 3px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+
         .remove-btn {
             background-color: red;
             padding: 3px 8px;
@@ -91,139 +121,122 @@
 </head>
 <body>
 
-<div class="container">
-    <h2>My Monthly Progress Chart</h2>
+    <div class="container" id="capture">
+        <h2>My Monthly Progress Chart</h2>
 
-    <div class="section">
-        <label>Name:</label>
-        <input type="text" id="name" placeholder="Enter your name">
-        
-        <label>Month & Year:</label>
-        <input type="text" id="monthYear" placeholder="e.g., May 2024">
-        
-        <label>Simple Setups:</label>
-        <input type="number" id="simpleSetups" value="0">
-        
-        <label>Complex Setups:</label>
-        <input type="number" id="complexSetups" value="0">
-        
-        <label>First Transaction Assistance:</label>
-        <input type="number" id="firstTransaction" value="0">
-        
-        <label>Client Visits:</label>
-        <input type="number" id="clientVisits" value="0">
+        <div class="section">
+            <div class="row">
+                <div>
+                    <label>Name:</label>
+                    <input type="text" id="name" placeholder="Enter your name">
+                </div>
+                <div>
+                    <label>Month & Year:</label>
+                    <span id="monthYear" style="font-weight: bold;"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    <label>Simple Setups:</label>
+                    <input type="number" id="simpleSetups" value="0">
+                </div>
+                <div>
+                    <label>Complex Setups:</label>
+                    <input type="number" id="complexSetups" value="0">
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    <label>First Transaction Assistance:</label>
+                    <input type="number" id="firstTransaction" value="0">
+                </div>
+                <div>
+                    <label>Client Visits:</label>
+                    <input type="number" id="clientVisits" value="0">
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Product Knowledge</h3>
+            <label>Products I am proficient with:</label>
+            <div class="checkbox-group">
+                <label><input type="checkbox" value="ENBD Transfers"> ENBD Transfers</label>
+                <label><input type="checkbox" value="GPSSA"> GPSSA</label>
+                <label><input type="checkbox" value="Host to Host"> Host to Host</label>
+                <label><input type="checkbox" value="API Banking"> API Banking</label>
+                <label><input type="checkbox" value="FCY Transfers"> FCY Transfers</label>
+                <label><input type="checkbox" value="DDS"> DDS</label>
+                <label><input type="checkbox" value="Cheque Printing"> Cheque Printing</label>
+                <label><input type="checkbox" value="Swift Score"> Swift Score</label>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Learning and Development</h3>
+            <label>Courses Assigned to Me:</label>
+            <input type="text" id="courseAssignedInput" placeholder="Enter course name">
+            <button onclick="addItem('courseAssignedList', 'courseAssignedInput')">Add</button>
+            <div class="list-container">
+                <ul id="courseAssignedList"></ul>
+            </div>
+        </div>
+
+        <button id="submitButton" onclick="generatePDF()">Submit & Download PDF</button>
     </div>
 
-    <div class="section">
-        <h3>Product Knowledge</h3>
-        <label>Products I am proficient with:</label>
-        <input type="text" id="proficientInput" placeholder="Enter product name">
-        <button onclick="addItem('proficientList', 'proficientInput')">Add</button>
-        <div class="list-container">
-            <ul id="proficientList"></ul>
-        </div>
-
-        <label>Products I am yet to learn about:</label>
-        <input type="text" id="yetToLearnInput" placeholder="Enter product name">
-        <button onclick="addItem('yetToLearnList', 'yetToLearnInput')">Add</button>
-        <div class="list-container">
-            <ul id="yetToLearnList"></ul>
-        </div>
-    </div>
-
-    <div class="section">
-        <h3>Leaves & WFH</h3>
-        <label>Annual Leave:</label>
-        <input type="number" id="annualLeave" value="0">
-        
-        <label>Sick Leave:</label>
-        <input type="number" id="sickLeave" value="0">
-        
-        <label>Work From Home (WFH):</label>
-        <input type="number" id="wfh" value="0">
-        
-        <label>Other Leaves:</label>
-        <input type="text" id="otherLeaves">
-
-        <label>Reason for Other Leave:</label>
-        <input type="text" id="leaveReasonInput" placeholder="Enter reason">
-        <button onclick="addItem('leaveReasonList', 'leaveReasonInput')">Add</button>
-        <div class="list-container">
-            <ul id="leaveReasonList"></ul>
-        </div>
-    </div>
-
-    <div class="section">
-        <h3>Learning and Development</h3>
-        <label>Courses Assigned to Me:</label>
-        <input type="text" id="courseAssignedInput" placeholder="Enter course name">
-        <button onclick="addItem('courseAssignedList', 'courseAssignedInput')">Add</button>
-        <div class="list-container">
-            <ul id="courseAssignedList"></ul>
-        </div>
-
-        <label>Courses Completed on My Own Initiative:</label>
-        <input type="text" id="courseCompletedInput" placeholder="Enter course name">
-        <button onclick="addItem('courseCompletedList', 'courseCompletedInput')">Add</button>
-        <div class="list-container">
-            <ul id="courseCompletedList"></ul>
-        </div>
-    </div>
-
-    <div class="section">
-        <h3>Other Contributions</h3>
-        <label>Other Ways I Have Added Value:</label>
-        <input type="text" id="addedValueInput" placeholder="Enter contribution">
-        <button onclick="addItem('addedValueList', 'addedValueInput')">Add</button>
-        <div class="list-container">
-            <ul id="addedValueList"></ul>
-        </div>
-    </div>
-
-    <button class="submit-btn" onclick="generateExcel()">Submit & Download Report</button>
-</div>
-
-<script>
-    function addItem(listId, inputId) {
-        let input = document.getElementById(inputId);
-        let value = input.value.trim();
-        
-        if (value !== "") {
-            let list = document.getElementById(listId);
-            let li = document.createElement("li");
-            li.innerHTML = `${value} <button class="remove-btn" onclick="this.parentNode.remove()">X</button>`;
-            list.appendChild(li);
-            input.value = "";
+    <script>function setCurrentMonthYear() {
+            const date = new Date();
+            const options = { year: 'numeric', month: 'long' };
+            document.getElementById("monthYear").textContent = date.toLocaleDateString('en-US', options);
         }
-    }
+        setCurrentMonthYear();
 
-    function generateExcel() {
-        let data = [
-            ["My Monthly Progress Chart"],
-            ["Name", document.getElementById("name").value],
-            ["Month & Year", document.getElementById("monthYear").value],
-            ["Simple Setups", document.getElementById("simpleSetups").value],
-            ["Complex Setups", document.getElementById("complexSetups").value],
-            ["First Transaction Assistance", document.getElementById("firstTransaction").value],
-            ["Client Visits", document.getElementById("clientVisits").value],
-            [],
-            ["Product Knowledge"],
-            ["Proficient With", getListValues("proficientList")],
-            ["Yet to Learn", getListValues("yetToLearnList")],
-            [],
-            ["Leaves & WFH"],
-            ["Reason for Other Leave", getListValues("leaveReasonList")],
-            [],
-            ["Other Contributions"],
-            ["Value Added", getListValues("addedValueList")]
-        ];
+        function prepareForCapture(hiddenElements) {
+            hiddenElements.forEach(id => {
+                let element = document.getElementById(id);
+                if (element) element.style.display = "none";
+            });
+        }
 
-        let ws = XLSX.utils.aoa_to_sheet(data);
-        let wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Monthly Report");
-        XLSX.writeFile(wb, "Monthly_Progress_Report.xlsx");
-    }
-</script>
+        function restoreAfterCapture(hiddenElements) {
+            hiddenElements.forEach(id => {
+                let element = document.getElementById(id);
+                if (element) element.style.display = "";
+            });
+        }
+
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const hiddenElements = ["submitButton"];
+
+            prepareForCapture(hiddenElements);
+
+            setTimeout(() => {
+                html2canvas(document.querySelector("#capture"), { scale: 2 }).then(canvas => {
+                    let imgData = canvas.toDataURL("image/png");
+                    let pdf = new jsPDF("p", "mm", "a4");
+                    pdf.addImage(imgData, "PNG", 0, 0, 210, 297);
+                    pdf.save("Monthly_Progress_Report.pdf");
+                    restoreAfterCapture(hiddenElements);
+                });
+            }, 500);
+        }
+
+        function addItem(listId, inputId) {
+            let input = document.getElementById(inputId);
+            let value = input.value.trim();
+
+            if (value !== "") {
+                let list = document.getElementById(listId);
+                let li = document.createElement("li");
+                li.innerHTML = `${value} <button class="remove-btn" onclick="this.parentNode.remove()">X</button>`;
+                list.appendChild(li);
+                input.value = "";
+            }
+        }</script>
 
 </body>
 </html>
