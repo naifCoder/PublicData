@@ -1,356 +1,347 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monthly Progress Chart</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #EAE8EB;
-            margin: 0;
-            padding: 10px;
-        }
-        .container {
-            margin: auto;
-            gap: 30px;
-            padding: 10px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-        }
-        h2 {
-            text-align: center;
-            background-color: #002f6c;
-            color: #EAE8EB;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        .section {
-            gap: 15px;
-            margin: 20px 0;
-            padding: 10px;
-            border-radius: 8px;
-        }
-        label {
-            color:  #3A5DC1;
-            font-weight: bold;
-            display: block;
-            margin: 10px 0 5px;
-        }
-        input, textarea {
-            width: 100%;
-            padding: 8px;
-            border: none;
-            color: #000000;
-            border-radius: 4px;
-        }
-        .checkbox-group {
-            display: flex;
-            flex-wrap: wrap;
-        }
-        .checkbox-group label {
-            color:  #3A5DC1;
-            width: 30%;
-            font-weight: normal;
-        }
-        .submit-btn {
-            display: block;
-            width: 100%;
-            padding: 0px;
-            background-color: #3A5DC1;
-            border: none;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 10px;
-            margin-top: 15px;
-        }
-        .submit-btn:hover {
-            background-color: #003c80;
-        }
-        .list-container {
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        .list-container ul {
-            list-style: none;
-            padding: 0;
-        }
-        .list-container ul li {
-            background: #222;
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 3px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .remove-btn {
-            background-color: red;
-            padding: 3px 8px;
-            border: none;
-            color: white;
-            cursor: pointer;
-            border-radius: 3px;
-        }
-        .addbutton {
-            padding: 8px 12px;
-            background-color: #3A5DC1;
-            border: none;
-            color: white;
-            font-size: 14px;
-            cursor: pointer;
-            border-radius: 10px;
-            display: inline-block;
-        }
-        .row {
-            display: flex;
-            gap: 40px;
-        }
-            .row div {
-                flex: 1;
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Monthly Progress Chart</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #EAE8EB;
+                margin: 0;
+                padding: 10px;
             }
-    </style>
-</head>
-<body>
-<div class="container">
-    <h2>My Monthly Progress Chart</h2>
-
-    <div class="section">
-        <div class="row">
-            <div>
-                <label>Name:</label>
-                <input type="text" id="name" placeholder="Enter your name">
-            </div>
-            <div>
-                <label>Month & Year:</label>
-                <span id="monthYear" style="font-weight: bold;"></span>
-            </div>
-        </div>
-        
-        <div class="row">
-            <div>
-                <label>Simple Setups:</label>
-                <input type="number" id="simpleSetups" value="0">
-            </div>
-            <div>
-                <label>Complex Setups:</label>
-                <input type="number" id="complexSetups" value="0">
-            </div>
-        </div>
-        
-        <div class="row">
-            <div>
-                <label>First Transaction Assistance:</label>
-                <input type="number" id="firstTransaction" value="0">
-            </div>
-            <div>
-                <label>Client Visits:</label>
-                <input type="number" id="clientVisits" value="0">
-            </div>
-        </div>
-    </div>
-
-    <div class="section">
-        <h3>Product Knowledge</h3>
-        <label>Products I am proficient with:</label>
-        <div class="checkbox-group">
-            <label><input type="checkbox" value="ENBD Transfers"> ENBD Transfers</label>
-            <label><input type="checkbox" value="GPSSA"> GPSSA</label>
-            <label><input type="checkbox" value="Host to Host"> Host to Host</label>
-            <label><input type="checkbox" value="API Banking"> API Banking</label>
-            <label><input type="checkbox" value="FCY Transfers"> FCY Transfers</label>
-            <label><input type="checkbox" value="DDS"> DDS</label>
-            <label><input type="checkbox" value="Cheque Printing"> Cheque Printing</label>
-            <label><input type="checkbox" value="Swift Score"> Swift Score</label>
-            <label><input type="checkbox" value="LCY Payments"> LCY Payments</label>
-            <label><input type="checkbox" value="Trade"> Trade</label>
-            <label><input type="checkbox" value="Salary WPS"> Salary WPS</label>
-            <label><input type="checkbox" value="ICCS"> ICCS</label>
-            <label><input type="checkbox" value="Mobile App"> Mobile App</label>
-            <label><input type="checkbox" value="Virtual Accounts"> Virtual Accounts</label>
-            <label><input type="checkbox" value="Admin Module"> Admin Module</label>
-            <label><input type="checkbox" value="Fixed Debit"> Fixed Debit</label>
-            <label><input type="checkbox" value="Special Deal"> Special Deal</label>
-            <label><input type="checkbox" value="Utilities"> Utilities</label>
-        </div>
-
-        <label>Products I am yet to learn about:</label>
-        <div class="checkbox-group">
-            <label><input type="checkbox" value="File Encryption"> File Encryption</label>
-            <label><input type="checkbox" value="Service Portal"> Service Portal</label>
-            <label><input type="checkbox" value="Cheque Printing"> Cheque Printing</label>
-            <label><input type="checkbox" value="Swift Score"> Swift Score</label>
-            <label><input type="checkbox" value="API Banking"> API Banking</label>
-            <label><input type="checkbox" value="Virtual Accounts"> Virtual Accounts</label>
-            <label><input type="checkbox" value="Utilities"> Utilities</label>
-        </div>
-    </div>
-
-    <div class="section">
-        <h3>Leaves & WFH</h3>
-        <div class="row">
-            <div>
-                <label>Annual Leave:</label>
-                <input type="number" id="annualLeave" value="0">
-            </div>
-            <div>
-                <label>Sick Leave:</label>
-                <input type="number" id="sickLeave" value="0">
-            </div>
-            <div>
-                <label>Work From Home (WFH):</label>
-                <input type="number" id="wfh" value="0">
-            </div>
-            <div>
-                <label>Other Leaves:</label>
-                <input type="text" id="otherLeaves">
-            </div>
-        </div>
-        
-        <label>Reason for Other Leave:</label>
-        <div id="c1" class="row">
-            <div>
-                <input type="text" id="leaveReasonInput" placeholder="Enter reason">
-            </div>
-            <div>
-                <button class="addbutton" onclick="addItem('leaveReasonList', 'leaveReasonInput')">Add</button>
-            </div>
-        </div>
-        <div class="list-container">
-            <ul id="leaveReasonList"></ul>
-        </div>
-    </div>
-
-    <div class="section">
-        <h3>Learning and Development</h3>
-        <div class="row">
-            <div>
-                <label>Courses Assigned to Me:</label>
-                <div id="c2" class="row">
-                    <div>
-                        <input type="text" id="courseAssignedInput" placeholder="Enter course name">
-                    </div>
-                    <div>
-                        <button class="addbutton" onclick="addItem('courseAssignedList', 'courseAssignedInput')">Add</button>
-                    </div>
-                </div>
-                <div id="c3" class="list-container">
-                    <ul id="courseAssignedList"></ul>
-                </div>
-            </div>
-            <div>
-                <label>Courses Completed on My Own Initiative:</label>
+            .container {
+                margin: auto;
+                gap: 30px;
+                padding: 10px;
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+            }
+            h2 {
+                text-align: center;
+                background-color: #002f6c;
+                color: #EAE8EB;
+                padding: 10px;
+                border-radius: 5px;
+            }
+            .section {
+                gap: 15px;
+                margin: 20px 0;
+                padding: 10px;
+                border-radius: 8px;
+            }
+            label {
+                color: #3A5DC1;
+                font-weight: bold;
+                display: block;
+                margin: 10px 0 5px;
+            }
+            input, textarea {
+                width: 100%;
+                padding: 8px;
+                border: none;
+                color: #000000;
+                border-radius: 4px;
+            }
+            .checkbox-group {
+                display: flex;
+                flex-wrap: wrap;
+            }
+                .checkbox-group label {
+                    color: #3A5DC1;
+                    width: 30%;
+                    font-weight: normal;
+                    gap: 10px;
+                }
+            .submit-btn {
+                display: block;
+                width: 100%;
+                padding: 0px;
+                background-color: #3A5DC1;
+                border: none;
+                color: white;
+                font-size: 16px;
+                cursor: pointer;
+                border-radius: 10px;
+                margin-top: 15px;
+            }
+                .submit-btn:hover {
+                    background-color: #003c80;
+                }
+            .list-container {
+                margin-top: 10px;
+                padding: 10px;
+                border-radius: 5px;
+            }
+                .list-container ul {
+                    list-style: none;
+                    padding: 0;
+                }
+                    .list-container ul li {
+                        background: #FFFFFF;
+                        padding: 10px;
+                        margin: 5px 0;
+                        border-radius: 3px;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                    }
+            .remove-btn {
+                background-color: red;
+                padding: 3px 8px;
+                border: none;
+                color: white;
+                cursor: pointer;
+                border-radius: 3px;
+            }
+            .addbutton {
+                padding: 8px 12px;
+                background-color: #3A5DC1;
+                border: none;
+                color: white;
+                font-size: 14px;
+                cursor: pointer;
+                border-radius: 10px;
+                display: inline-block;
+            }
+            .row {
+                display: flex;
+                gap: 40px;
+            }
+                .row div {
+                    flex: 1;
+                }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h2>My Monthly Progress Chart</h2>
+            <div class="section">
                 <div class="row">
                     <div>
-                        <input type="text" id="courseCompletedInput" placeholder="Enter course name">
+                        <label>Name:</label>
+                        <input type="text" id="name" placeholder="Enter your name">
                     </div>
                     <div>
-                        <button class="addbutton" onclick="addItem('courseCompletedList', 'courseCompletedInput')">Add</button>
+                        <label>Month & Year:</label>
+                        <span id="monthYear" style="font-weight: bold;"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div>
+                        <label>Simple Setups:</label>
+                        <input type="number" value="0">
+                    </div>
+                    <div>
+                        <label>Complex Setups:</label>
+                        <input type="number" value="0">
+                    </div>
+                </div>
+                <div class="row">
+                    <div>
+                        <label>First Transaction Assistance:</label>
+                        <input type="number" value="0">
+                    </div>
+                    <div>
+                        <label>Client Visits:</label>
+                        <input type="number" value="0">
+                    </div>
+                </div>
+            </div>
+            <div class="section">
+                <h3>Product Knowledge</h3>
+                <label>Products I am proficient with:</label>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" value="ENBD Transfers"> ENBD Transfers</label>
+                    <label><input type="checkbox" value="GPSSA"> GPSSA</label>
+                    <label><input type="checkbox" value="Host to Host"> Host to Host</label>
+                    <label><input type="checkbox" value="API Banking"> API Banking</label>
+                    <label><input type="checkbox" value="FCY Transfers"> FCY Transfers</label>
+                    <label><input type="checkbox" value="DDS"> DDS</label>
+                    <label><input type="checkbox" value="Cheque Printing"> Cheque Printing</label>
+                    <label><input type="checkbox" value="Swift Score"> Swift Score</label>
+                    <label><input type="checkbox" value="LCY Payments"> LCY Payments</label>
+                    <label><input type="checkbox" value="Trade"> Trade</label>
+                    <label><input type="checkbox" value="Salary WPS"> Salary WPS</label>
+                    <label><input type="checkbox" value="ICCS"> ICCS</label>
+                    <label><input type="checkbox" value="Mobile App"> Mobile App</label>
+                    <label><input type="checkbox" value="Virtual Accounts"> Virtual Accounts</label>
+                    <label><input type="checkbox" value="Admin Module"> Admin Module</label>
+                    <label><input type="checkbox" value="Fixed Debit"> Fixed Debit</label>
+                    <label><input type="checkbox" value="Special Deal"> Special Deal</label>
+                    <label><input type="checkbox" value="Utilities"> Utilities</label>
+                </div>
+                <label>Products I am yet to learn about:</label>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" value="File Encryption"> File Encryption</label>
+                    <label><input type="checkbox" value="Service Portal"> Service Portal</label>
+                    <label><input type="checkbox" value="Cheque Printing"> Cheque Printing</label>
+                    <label><input type="checkbox" value="Swift Score"> Swift Score</label>
+                    <label><input type="checkbox" value="API Banking"> API Banking</label>
+                    <label><input type="checkbox" value="Virtual Accounts"> Virtual Accounts</label>
+                    <label><input type="checkbox" value="Utilities"> Utilities</label>
+                </div>
+            </div>
+            <div class="section">
+                <h3>Leaves & WFH</h3>
+                <div class="row">
+                    <div>
+                        <label>Annual Leave:</label>
+                        <input type="number" value="0">
+                    </div>
+                    <div>
+                        <label>Sick Leave:</label>
+                        <input type="number" value="0">
+                    </div>
+                    <div>
+                        <label>Work From Home (WFH):</label>
+                        <input type="number" value="0">
+                    </div>
+                    <div>
+                        <label>Other Leaves:</label>
+                        <input type="number" value="0">
+                    </div>
+                </div>
+                <label>Reason for Other Leave:</label>
+                <div id="c1" class="row">
+                    <div>
+                        <input type="text" id="leaveReasonInput" placeholder="Enter reason">
+                    </div>
+                    <div>
+                        <button class="addbutton" onclick="addItem('leaveReasonList', 'leaveReasonInput')">Add</button>
                     </div>
                 </div>
                 <div class="list-container">
-                    <ul id="courseCompletedList"></ul>
+                    <ul id="leaveReasonList"></ul>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <div class="section">
-        <h3>Other Contributions</h3>
-        <label>Other Ways I Have Added Value:</label>
-        <div id="c4" class="row">
-            <div>
-                <input type="text" id="addedValueInput" placeholder="Enter contribution">
+            <div class="section">
+                <h3>Learning and Development</h3>
+                <div class="row">
+                    <div>
+                        <label>Courses Assigned to Me:</label>
+                        <div id="c2" class="row">
+                            <div>
+                                <input type="text" id="courseAssignedInput" placeholder="Enter course name">
+                            </div>
+                            <div>
+                                <button class="addbutton" onclick="addItem('courseAssignedList', 'courseAssignedInput')">Add</button>
+                            </div>
+                        </div>
+                        <div class="list-container">
+                            <ul id="courseAssignedList"></ul>
+                        </div>
+                    </div>
+                    <div>
+                        <label>Courses Completed on My Own Initiative:</label>
+                        <div id="c3" class="row">
+                            <div>
+                                <input type="text" id="courseCompletedInput" placeholder="Enter course name">
+                            </div>
+                            <div>
+                                <button class="addbutton" onclick="addItem('courseCompletedList', 'courseCompletedInput')">Add</button>
+                            </div>
+                        </div>
+                        <div class="list-container">
+                            <ul id="courseCompletedList"></ul>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div>
-                <button class="addbutton" onclick="addItem('addedValueList', 'addedValueInput')">Add</button>
+            <div class="section">
+                <h3>Other Contributions</h3>
+                <label>Other Ways I Have Added Value:</label>
+                <div id="c4" class="row">
+                    <div>
+                        <input type="text" id="addedValueInput" placeholder="Enter contribution">
+                    </div>
+                    <div>
+                        <button class="addbutton" onclick="addItem('addedValueList', 'addedValueInput')">Add</button>
+                    </div>
+                </div>
+                <div class="list-container">
+                    <ul id="addedValueList"></ul>
+                </div>
             </div>
+            <button id="submitButton" class="submit-btn" onclick="generatePDF()">Submit</button>
         </div>
-        <div class="list-container">
-            <ul id="addedValueList"></ul>
-        </div>
-    </div>
-
-    <button id="submitButton" class="submit-btn" onclick="generatePDF()">Submit</button>
-</div>
-
-<script>
-    function setCurrentMonthYear() {
-        const date = new Date();
-        const options = { year: 'numeric', month: 'long' };
-        document.getElementById("monthYear").textContent = date.toLocaleDateString('en-US', options);
-    }
-  
-    setCurrentMonthYear();
-
-    function prepareForCapture(hiddenElements, hiddenClasses) {
-        // Hide elements by ID
-        hiddenElements.forEach(id => {
-            let element = document.getElementById(id);
-            if (element) {
-                element.style.display = "none";
+        <script>
+            function setCurrentMonthYear() {
+                const date = new Date();
+                const options = { year: 'numeric', month: 'long' };
+                document.getElementById("monthYear").textContent = date.toLocaleDateString('en-US', options);
             }
-        });
-        // Hide elements by class
-        hiddenClasses.forEach(className => {
-            let elements = document.querySelectorAll(`.${className}`);
-            elements.forEach(element => {
-                element.style.display = "none";
-            });
-        });
-    }
 
-    function restoreAfterCapture(hiddenElements, hiddenClasses) {
-        // Restore elements by ID
-        hiddenElements.forEach(id => {
-            let element = document.getElementById(id);
-            if (element) {
-                element.style.display = "";
+            function prepareForCapture(hiddenElements, hiddenClasses) {
+                // Hide elements by ID
+                hiddenElements.forEach(id => {
+                    let element = document.getElementById(id);
+                    if (element) {
+                        element.style.display = "none";
+                    }
+                });
+                // Hide elements by class
+                hiddenClasses.forEach(className => {
+                    let elements = document.querySelectorAll(`.${className}`);
+                    elements.forEach(element => {
+                        element.style.display = "none";
+                    });
+                });
             }
-        });
-        // Restore elements by class
-        hiddenClasses.forEach(className => {
-            let elements = document.querySelectorAll(`.${className}`);
-            elements.forEach(element => {
-                element.style.display = "";
-            });
-        });
-    }
-}
-    function generatePDF() {
-        const { jsPDF } = window.jspdf;
-        const hiddenElements = ["submitButton", "c1", "c2", "c3", "c4"]; // Hide by ID
-        const hiddenClasses = ["remove-btn"]; // Hide by CSS class
-        prepareForCapture(hiddenElements, hiddenClasses); // Hide elements before capture
-        setTimeout(() => {
-            html2canvas(document.querySelector("#capture"), { scale: 2 }).then(canvas => {
-                let imgData = canvas.toDataURL("image/png");
-                let pdf = new jsPDF("p", "mm", "a4");
-                pdf.addImage(imgData, "PNG", 0, 0, 210, 297);
-                pdf.save("Monthly_Progress_Report.pdf");
-                restoreAfterCapture(hiddenElements, hiddenClasses); // Restore elements after capture
-            });
-        }, 500);
-    }
 
-    function addItem(listId, inputId) {
-        let input = document.getElementById(inputId);
-        let value = input.value.trim();
-        
-        if (value !== "") {
-            let list = document.getElementById(listId);
-            let li = document.createElement("li");
-            li.innerHTML = `${value} <button class="remove-btn" onclick="this.parentNode.remove()">X</button>`;
-            list.appendChild(li);
-            input.value = "";
-        }
-    }
-    
-</script>
+            function restoreAfterCapture(hiddenElements, hiddenClasses) {
+                // Restore elements by ID
+                hiddenElements.forEach(id => {
+                    let element = document.getElementById(id);
+                    if (element) {
+                        element.style.display = "";
+                    }
+                });
+                // Restore elements by class
+                hiddenClasses.forEach(className => {
+                    let elements = document.querySelectorAll(`.${className}`);
+                    elements.forEach(element => {
+                        element.style.display = "";
+                    });
+                });
+            }
 
-</body>
+            function generatePDF() {
+                const { jsPDF } = window.jspdf;
+                const hiddenElements = ["submitButton", "c1", "c2", "c3", "c4"]; // Hide by ID
+                const hiddenClasses = ["remove-btn"]; // Hide by CSS class
+                let employeeName = document.getElementById("name").value.trim();
+                let fileName = employeeName ? `Monthly_Progress_Report_${employeeName}.pdf` : "Monthly_Progress_Report.pdf";
+                prepareForCapture(hiddenElements, hiddenClasses); // Hide elements before capture
+                setTimeout(() => {
+                    html2canvas(document.body, {scale: 2}).then(canvas => {
+                        let imgData = canvas.toDataURL("image/png");
+                        let pdf = new jsPDF("p", "mm", "a4");
+                        let imgWidth = 210;  // A4 width in mm
+                        let imgHeight = (canvas.height * imgWidth) / canvas.width;  // Maintain aspect ratio
+                        pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+                        pdf.save(fileName);
+                        restoreAfterCapture(hiddenElements, hiddenClasses); // Restore elements after capture
+                    });
+                }, 500);
+            }
+
+            function addItem(listId, inputId) {
+                let input = document.getElementById(inputId);
+                let value = input.value.trim();
+                if (value !== "") {
+                    let list = document.getElementById(listId);
+                    let li = document.createElement("li");
+                    li.innerHTML = `${value} <button class="remove-btn" onclick="this.parentNode.remove()">X</button>`;
+                    list.appendChild(li);
+                    input.value = "";
+                }
+            }
+            
+            setCurrentMonthYear();
+        </script>
+    </body>
 </html>
