@@ -1,0 +1,40 @@
+#!/bin/bash\
+\
+# Detect OS and launch appropriate application\
+if [[ "$OSTYPE" == "darwin"* ]]; then\
+    echo "Detected macOS, launching..."\
+    open "/Volumes/SharedFolder/OpenMyHTML.app"\
+elif [[ "$OSTYPE" == "linux-gnu"* || "$OSTYPE" == "cygwin" || "$OSTYPE" == "msys" ]]; then\
+    echo "Detected Windows, launching..."\
+    cmd.exe /c "\\\\CompanyServer\\SharedFolder\\OpenMyHTML.vbs"\
+else\
+    echo "Unknown OS, cannot run."\
+    exit 1\
+fi\
+\
+\pard\pardeftab720\partightenfactor0
+
+\f1\fs24 \cf0 \strokec2 Make it executable (for Mac/Linux)::\
+chmod +x /Volumes/SharedFolder/cross-launcher.command\
+\
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs26 \cf0 \strokec2 OpenMyHTML.vbs:\
+Set objShell = CreateObject("WScript.Shell")\
+objShell.Run "mshta ""\\\\CompanyServer\\SharedFolder\\index.html""", 0, False\
+\
+OpenMyHTML.bat:\
+@echo off\
+start mshta "\\\\CompanyServer\\SharedFolder\\index.html"\
+exit\
+\
+OpenMyHTML.app:\
+function run(input, parameters) \{\
+    var app = Application.currentApplication();\
+    app.includeStandardAdditions = true;\
+    var url = "file:///Volumes/SharedFolder/index.html";\
+    \
+    // Open in WebKit full-screen view\
+    app.doShellScript("open -a 'Safari' " + url);\
+\}\
+}
