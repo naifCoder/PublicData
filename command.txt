@@ -1,40 +1,59 @@
-#!/bin/bash\
-\
-# Detect OS and launch appropriate application\
-if [[ "$OSTYPE" == "darwin"* ]]; then\
-    echo "Detected macOS, launching..."\
-    open "/Volumes/SharedFolder/OpenMyHTML.app"\
-elif [[ "$OSTYPE" == "linux-gnu"* || "$OSTYPE" == "cygwin" || "$OSTYPE" == "msys" ]]; then\
-    echo "Detected Windows, launching..."\
-    cmd.exe /c "\\\\CompanyServer\\SharedFolder\\OpenMyHTML.vbs"\
-else\
-    echo "Unknown OS, cannot run."\
-    exit 1\
-fi\
-\
-\pard\pardeftab720\partightenfactor0
+-- To-Do App Using AppleScript + SQLite
 
-\f1\fs24 \cf0 \strokec2 Make it executable (for Mac/Linux)::\
-chmod +x /Volumes/SharedFolder/cross-launcher.command\
-\
-\pard\pardeftab720\partightenfactor0
+-- Set DB path
+set dbPath to POSIX path of (path to desktop folder) & "todo.db"
 
-\f0\fs26 \cf0 \strokec2 OpenMyHTML.vbs:\
-Set objShell = CreateObject("WScript.Shell")\
-objShell.Run "mshta ""\\\\CompanyServer\\SharedFolder\\index.html""", 0, False\
-\
-OpenMyHTML.bat:\
-@echo off\
-start mshta "\\\\CompanyServer\\SharedFolder\\index.html"\
-exit\
-\
-OpenMyHTML.app:\
-function run(input, parameters) \{\
-    var app = Application.currentApplication();\
-    app.includeStandardAdditions = true;\
-    var url = "file:///Volumes/SharedFolder/index.html";\
-    \
-    // Open in WebKit full-screen view\
-    app.doShellScript("open -a 'Safari' " + url);\
-\}\
-}
+-- Create DB and table if not exist
+do shell script "sqlite3 " & quoted form of dbPath & " 'CREATE TABLE IF NOT EXISTS todos (id INTEGER PRIMARY KEY, title TEXT, description TEXT);'"
+
+-- Main loop
+repeat
+	set actionList to {"➕ Add Task", "👁 View Tasks", "❌ Delete Task", "🚪 Exit"}
+	set userChoice to choose from list actionList with prompt "Choose an action:" default items "➕ Add Task"
+	if userChoice is false or item 1 of userChoice is "🚪 Exit" then exit repeat
+
+	if item 1 of userChoice is "➕ Add Task" then
+		-- Get title
+		set titleInput to text returned of (display dialog "Enter Task Title:" default answer "")
+		
+		-- Get description
+		set descInput to text returned of (display dialog "Enter Task Description:" default answer "")
+		
+		-- Insert into DB
+		set insertSQL to "INSERT INTO todos (title, description) VALUES (" & quoted form of titleInput & ", " & quoted form of descInput & ");"
+		do shell script "sqlite3 " & quoted form of dbPath & " " & quoted form of insertSQL
+		display dialog "✅ Task added successfully!" buttons {"OK"} default button "OK"
+		
+	else if item 1 of userChoice is "👁 View Tasks" then
+		-- Read all tasks
+		try
+			set query to "SELECT id, title FROM todos;"
+			set result to do shell script "sqlite3 " & quoted form of dbPath & " " & quoted form of query
+			if result is "" then
+				display dialog "📭 No tasks found." buttons {"OK"} default button "OK"
+			else
+				display dialog "📝 Tasks List:" & return & result buttons {"OK"} default button "OK"
+			end if
+		on error errMsg
+			display dialog "⚠️ Error fetching tasks: " & errMsg buttons {"OK"} default button "OK"
+		end try
+
+	else if item 1 of userChoice is "❌ Delete Task" then
+		-- Load tasks
+		set query to "SELECT id || ' - ' || title FROM todos;"
+		set taskList to paragraphs of (do shell script "sqlite3 " & quoted form of dbPath & " " & quoted form of query)
+		if taskList is {} then
+			display dialog "📭 No tasks to delete." buttons {"OK"} default button "OK"
+		else
+			set selectedTask to choose from list taskList with prompt "Select a task to delete:"
+			if selectedTask is not false then
+				set taskId to word 1 of (item 1 of selectedTask)
+				set delSQL to "DELETE FROM todos WHERE id = " & taskId & ";"
+				do shell script "sqlite3 " & quoted form of dbPath & " " & quoted form of delSQL
+				display dialog "🗑 Task deleted." buttons {"OK"} default button "OK"
+			end if
+		end if
+	end if
+end repeat
+
+display dialog "👋 Goodbye!" buttons {"OK"} default button "OK"
